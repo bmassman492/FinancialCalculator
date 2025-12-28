@@ -26,4 +26,3 @@ InvestmentLengthYrs = LoanLength - npf.nper(LoanInterestRate/PeriodsPerYear, Pay
 TotalInvestmentAccountValue2 = npf.fv(InvestmentReturnRate/PeriodsPerYear, InvestmentLengthYrs*PeriodsPerYear, Payment2*-1, pv=0)
 
 InvestBenefit = TotalInvestmentAccountValue - (TotalInterestOnLoan1-TotalInterestOnLoan2) - TotalInvestmentAccountValue2
-print(InvestBenefit)

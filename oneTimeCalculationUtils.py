@@ -45,4 +45,3 @@ Payment2 = npf.pmt(LoanInterestRate/PeriodsPerYear, LoanLength*PeriodsPerYear, (
 TotalInterestOnLoan2 = LoanLength*PeriodsPerYear*Payment2 - (LoanAmount-DownPayment)
 
 InvestBenefit = (TotalInvestmentAccountValue-(npf.fv(InvestmentReturnRate/PeriodsPerYear, LoanLength*PeriodsPerYear, (Payment1-Payment2)*-1, pv=0)) - (TotalInterestOnLoan1-TotalInterestOnLoan2))
-print(InvestBenefit)
