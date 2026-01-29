@@ -18,10 +18,10 @@ periodsPerYear = 12
 
 downPayment = 0
 extraPayOrInvest = 0
-if version == 1:
+if version == "1":
     downPayment = float(input("Enter the down payment amount that you are considering putting towards the loan vs investing e.g. 40000: "))
-if version == 2:
-    extraPayOrInvest = float(input("Enter the amount that you would pay off or invest each period (there are " + periodsPerYear + " periods in a year: "))
+if version == "2":
+    extraPayOrInvest = float(input("Enter the amount that you would pay off or invest each period (there are " + str(periodsPerYear) + " periods in a year: "))
 
 meanYearlyReturn = float(input("Enter the average yearly return that you anticipate from your investments. The average for large cap growth stocks is .122. If you are taking a safer or more aggressive approach, feel free to enter more or less. It is suggested you enter a lower amount to be safe. "))
 
@@ -74,27 +74,33 @@ def createTestReturnsArray(loanLengthYrs, meanYearlyReturn):
 
 # calculates investment account value after n years after being given an array of returns of size n
 def calcAccountExpectedValue(principalInvested, returnsArray):
-    return principalInvested * np.prod(1 + np.array(returnsArray))
+    return
+    
+    #return principalInvested * np.prod(1 + np.array(returnsArray))
 
 # identical to the numpy financial fv function, but passes in an array of return rates rather than a single return rate
-def fvArray(returnsArray, periodsPerYear, investmentLengthYears, periodicPayment):
-    return
+def fvArray(returnsArray, periodsPerYear, periodicPayment, pv):
+    value = pv
+    for yearly_return in returnsArray:
+        value = npf.fv(rate=yearly_return/periodsPerYear, nper=periodsPerYear, pmt=periodicPayment, pv=value)
+    return value
 
 # calculate results for a one time down payment/initial investment amount (version 1)
 def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray):
     investmentLengthYears = loanLengthYrs
     principalInvested = downPayment
-    return
+    totalInvestmentAccountValue = calcAccountExpectedValue(principalInvested, returnsArray)
+
+    return totalInvestmentAccountValue
 
 # calculate results for periodic recurring payments/investment amounts (version 2)
 def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray):
     return
 
 
+returnsArray = createTestReturnsArray(loanLengthYrs, meanYearlyReturn)
+print(returnsArray)
+#returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
 
-returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
 
-if version == 1:
-    print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
-if version == 2:
-    print(calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray))
+print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
