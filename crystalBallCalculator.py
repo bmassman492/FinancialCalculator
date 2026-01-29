@@ -1,5 +1,4 @@
 import numpy as np
-import statistics
 
 print("\nDebt vs. Investing calculator . . .")
 print("This program aims to determine the likelihood and amount that investing money rather than using it to pay off debt will pay off.")
@@ -16,12 +15,16 @@ loanIntRate = float(input("Enter the loan interest rate as a decimal e.g. .031: 
 
 periodsPerYear = 12
 
+downPayment = 0
+extraPayOrInvest = 0
+
 if version == 1:
     downPayment = float(input("Enter the down payment amount that you are considering putting towards the loan vs investing e.g. 40000: "))
 if version == 2:
     extraPayOrInvest = float(input("Enter the amount that you would pay off or invest each period (there are " + periodsPerYear + " periods in a year: "))
 
 meanYearlyReturn = float(input("Enter the average yearly return that you anticipate from your investments. The average for large cap growth stocks is .122. If you are taking a safer or more aggressive approach, feel free to enter more or less. It is suggested you enter a lower amount to be safe. "))
+
 print("\nSelect the type of investments you plan on using:")
 print("1. Large Cap Stocks")
 print("2. Small Cap Stocks")
@@ -68,5 +71,27 @@ def createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
     return returnsArray
 
 
+#One iteration of a scenario with randomly generated returns
+
+returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
 
 
+def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray):
+    investmentLengthYears = loanLengthYrs
+    principalInvested = downPayment
+    totalInvestmentAccountValue = principalInvested
+    for i in range(len(returnsArray)):
+        accumulation = totalInvestmentAccountValue*np.exp(returnsArray[i])
+        totalInvestmentAccountValue = accumulation
+    investmentGain = totalInvestmentAccountValue - principalInvested
+    return
+
+def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray):
+    return
+
+
+
+if version == 1:
+    print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
+if version == 2:
+    print(calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray))
