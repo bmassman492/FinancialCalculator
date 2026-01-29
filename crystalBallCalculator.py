@@ -1,23 +1,23 @@
+# import libraries
 import numpy as np
+import numpy_financial as npf
 
+# get input variables
 print("\nDebt vs. Investing calculator . . .")
 print("This program aims to determine the likelihood and amount that investing money rather than using it to pay off debt will pay off.")
 print("Please fill in the appropriate information relating to the investment.\n")
 
 version = ""
-
 while version not in ("1", "2"):
     version = input("Calculate for a one time payment (Enter 1) or for recurring payments (Enter 2): ")
 
 loanAmount = float(input("Enter the loan amount, e.g. 400000: "))
 loanLengthYrs = int(input("Enter the loan length in years e.g. 30: "))
 loanIntRate = float(input("Enter the loan interest rate as a decimal e.g. .031: "))
-
 periodsPerYear = 12
 
 downPayment = 0
 extraPayOrInvest = 0
-
 if version == 1:
     downPayment = float(input("Enter the down payment amount that you are considering putting towards the loan vs investing e.g. 40000: "))
 if version == 2:
@@ -32,9 +32,7 @@ print("3. Long Term Corporate Bonds")
 print("4. Long Term Government Bonds")
 print("5. Intermediate Term Government Bonds")
 print("6. U.S. Treasury Bills")
-
 choice = input("\nEnter the number corresponding with your investment type (1-6): ")
-
 investment_options = {
     "1": "Large Cap Stocks",
     "2": "Small Cap Stocks",
@@ -43,11 +41,9 @@ investment_options = {
     "5": "Intermediate Term Government Bonds",
     "6": "U.S. Treasury Bills"
 }
-
 investmentType = investment_options.get(choice, "Invalid selection")
 
 returnStandardDeviation = 0
-
 if investmentType == "Large Cap Stocks":
     returnStandardDeviation = .197
 elif investmentType == "Small Cap Stocks":
@@ -61,35 +57,42 @@ elif investmentType == "Intermediate Term Government Bonds":
 elif investmentType == "U.S. Treasury Bills":
     returnStandardDeviation = .031
 
+# creates an array of realistic sample returns with a length of loanLengthYrs
 def createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation):
     returnsArray = []
-
     for i in range(loanLengthYrs):
         z = np.random.normal(0, 1)
         returnsArray.append(round(meanYearlyReturn + z*returnStandardDeviation, 3))
-    
     return returnsArray
 
+# creates a test sample array where each value is equal to the meanYearlyReturn, to deterministically compare results to old program
+def createTestReturnsArray(loanLengthYrs, meanYearlyReturn):
+    returnsArray = []
+    for i in range(loanLengthYrs):
+        returnsArray.append(meanYearlyReturn)
+    return returnsArray
 
-#One iteration of a scenario with randomly generated returns
+# calculates investment account value after n years after being given an array of returns of size n
+def calcAccountExpectedValue(principalInvested, returnsArray):
+    return principalInvested * np.prod(1 + np.array(returnsArray))
 
-returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+# identical to the numpy financial fv function, but passes in an array of return rates rather than a single return rate
+def fvArray(returnsArray, periodsPerYear, investmentLengthYears, periodicPayment):
+    return
 
-
+# calculate results for a one time down payment/initial investment amount (version 1)
 def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray):
     investmentLengthYears = loanLengthYrs
     principalInvested = downPayment
-    totalInvestmentAccountValue = principalInvested
-    for i in range(len(returnsArray)):
-        accumulation = totalInvestmentAccountValue*np.exp(returnsArray[i])
-        totalInvestmentAccountValue = accumulation
-    investmentGain = totalInvestmentAccountValue - principalInvested
     return
 
+# calculate results for periodic recurring payments/investment amounts (version 2)
 def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray):
     return
 
 
+
+returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
 
 if version == 1:
     print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
