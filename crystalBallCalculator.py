@@ -62,7 +62,8 @@ def createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
     returnsArray = []
     for i in range(loanLengthYrs):
         z = np.random.normal(0, 1)
-        returnsArray.append(round(meanYearlyReturn + z*returnStandardDeviation, 3))
+        returnsArray.append(meanYearlyReturn + z*returnStandardDeviation)
+
     return returnsArray
 
 # creates a test sample array where each value is equal to the meanYearlyReturn, to deterministically compare results to old program
@@ -74,33 +75,52 @@ def createTestReturnsArray(loanLengthYrs, meanYearlyReturn):
 
 # calculates investment account value after n years after being given an array of returns of size n
 def calcAccountExpectedValue(principalInvested, returnsArray):
-    return
-    
-    #return principalInvested * np.prod(1 + np.array(returnsArray))
+    return principalInvested * np.prod(1 + np.array(returnsArray))
 
 # identical to the numpy financial fv function, but passes in an array of return rates rather than a single return rate
 def fvArray(returnsArray, periodsPerYear, periodicPayment, pv):
+
     value = pv
     for yearly_return in returnsArray:
-        value = npf.fv(rate=yearly_return/periodsPerYear, nper=periodsPerYear, pmt=periodicPayment, pv=value)
+        period_rate = yearly_return / periodsPerYear
+        for _ in range(periodsPerYear):
+            value = value * (1 + period_rate)
+            value += periodicPayment   # periodicPayment must be NEGATIVE
     return value
+
+    #value = pv
+    #for yearly_return in returnsArray:
+        #value = npf.fv(rate=yearly_return/periodsPerYear, nper=periodsPerYear, pmt=periodicPayment, pv=value)
+    #return value
 
 # calculate results for a one time down payment/initial investment amount (version 1)
 def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray):
     investmentLengthYears = loanLengthYrs
     principalInvested = downPayment
     totalInvestmentAccountValue = calcAccountExpectedValue(principalInvested, returnsArray)
-
-    return totalInvestmentAccountValue
+    payment1 = npf.pmt(loanIntRate/periodsPerYear, loanLengthYrs*periodsPerYear, loanAmount*-1)
+    totalInterestOnLoan1 = loanLengthYrs*periodsPerYear*payment1 - loanAmount
+    payment2 = npf.pmt(loanIntRate/periodsPerYear, loanLengthYrs*periodsPerYear, (loanAmount-downPayment)*-1)
+    totalInterestOnLoan2 = loanLengthYrs*periodsPerYear*payment2 - (loanAmount-downPayment)
+    extraPmt = -(payment2 - payment1)
+    investBenefit = (totalInvestmentAccountValue-(fvArray(returnsArray, periodsPerYear, extraPmt, pv=0)) - (totalInterestOnLoan1-totalInterestOnLoan2))
+    return investBenefit
 
 # calculate results for periodic recurring payments/investment amounts (version 2)
 def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, meanYearlyReturn, returnsArray):
     return
 
 
-returnsArray = createTestReturnsArray(loanLengthYrs, meanYearlyReturn)
-print(returnsArray)
-#returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
 
 
-print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
+
+
+results = []
+for i in range(1000):
+    #returnsArray = createTestReturnsArray(loanLengthYrs, meanYearlyReturn)
+    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+    results.append(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
+
+print(sum(results)/len(results))
+
+#print(calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray))
