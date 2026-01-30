@@ -79,19 +79,13 @@ def calcAccountExpectedValue(principalInvested, returnsArray):
 
 # identical to the numpy financial fv function, but passes in an array of return rates rather than a single return rate
 def fvArray(returnsArray, periodsPerYear, periodicPayment, pv):
-
     value = pv
     for yearly_return in returnsArray:
         period_rate = yearly_return / periodsPerYear
         for _ in range(periodsPerYear):
             value = value * (1 + period_rate)
-            value += periodicPayment   # periodicPayment must be NEGATIVE
+            value += periodicPayment   
     return value
-
-    #value = pv
-    #for yearly_return in returnsArray:
-        #value = npf.fv(rate=yearly_return/periodsPerYear, nper=periodsPerYear, pmt=periodicPayment, pv=value)
-    #return value
 
 # calculate results for a one time down payment/initial investment amount (version 1)
 def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, meanYearlyReturn, returnsArray):
