@@ -157,10 +157,35 @@ def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPer
 
 
 # Generates a sample return array of size 100000 and compares it to the input mean and standard deviation
-import statistics
-loanLengthYrs = 100000
-returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
-arrayMean = sum(returnsArray)/len(returnsArray)
-arraySD = statistics.stdev(returnsArray)
-print("The average return you selected was " + str(meanYearlyReturn) + " and the typical standard deviation of return for your selected investement type is " + str(returnStandardDeviation) + ".")
-print("The mean of the randomly generated returns was " + str(arrayMean) + " and the standard deviation was " + str(arraySD) + ".")
+#import statistics
+#loanLengthYrs = 100000
+#returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+#arrayMean = sum(returnsArray)/len(returnsArray)
+#arraySD = statistics.stdev(returnsArray)
+#print("The average return you selected was " + str(meanYearlyReturn) + " and the typical standard deviation of return for your selected investement type is " + str(returnStandardDeviation) + ".")
+#print("The mean of the randomly generated returns was " + str(arrayMean) + " and the standard deviation was " + str(arraySD) + ".")
+
+# Generate 10 sample return arrays of length 30 and print them
+#for i in range(30):
+#    loanLengthYrs = 30
+ #   returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+ #   print(returnsArray)
+
+
+
+# Generate 5 samples for each version and their corresponding investBenefit
+for i in range(5):
+    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+    result = calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, returnsArray)
+    for i in range(len(returnsArray)):
+        returnsArray[i] = round(returnsArray[i], 3)
+    print(returnsArray)
+    print(result)
+
+#for i in range(5):
+#    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+#    result = calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, returnsArray)
+#    for i in range(len(returnsArray)):
+#        returnsArray[i] = round(returnsArray[i], 3)
+#    print(returnsArray)
+#    print(result)
