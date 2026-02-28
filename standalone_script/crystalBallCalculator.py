@@ -113,7 +113,9 @@ def calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYe
     totalInterestOnLoan2 = loanLengthYrs*periodsPerYear*payment2 - (loanAmount-downPayment)
     extraPmt = -(payment2 - payment1)
     investBenefit = (totalInvestmentAccountValue-(fvArray(returnsArray, periodsPerYear, extraPmt, pv=0)) - (totalInterestOnLoan1-totalInterestOnLoan2))
-    return investBenefit
+    
+    #return investBenefit (temporarily removed for test)
+    return totalInvestmentAccountValue
 
 # calculate results for periodic recurring payments/investment amounts (version 2)
 def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, returnsArray):
@@ -127,7 +129,9 @@ def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPer
     investmentLengthYrs = loanLengthYrs - npf.nper(loanIntRate/periodsPerYear, payment2, loanAmount*-1, 0)/12
     totalInvestmentAccountValue2 = fvArray2(returnsArray, investmentLengthYrs, periodsPerYear, (payment2), pv=0)
     investBenefit = totalInvestmentAccountValue - (totalInterestOnLoan1-totalInterestOnLoan2) - totalInvestmentAccountValue2
-    return investBenefit
+    
+    #return investBenefit (temporarily removed for test)
+    return totalInvestmentAccountValue
 
 
 # Test 10000 random scenarios of the recurring payment calculator
@@ -171,21 +175,19 @@ def calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPer
  #   returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
  #   print(returnsArray)
 
-
-
 # Generate 5 samples for each version and their corresponding investBenefit
-#for i in range(5):
-#    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
-#    result = calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, returnsArray)
-#    for i in range(len(returnsArray)):
-#        returnsArray[i] = round(returnsArray[i], 3)
-#    print(returnsArray)
-#    print(result)
+for i in range(5):
+    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+    result = calculateOneTimeResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, downPayment, returnsArray)
+    for i in range(len(returnsArray)):
+        returnsArray[i] = round(returnsArray[i], 3)
+    print(returnsArray)
+    print(result)
 
-#for i in range(5):
-#    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
-#    result = calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, returnsArray)
-#    for i in range(len(returnsArray)):
-#        returnsArray[i] = round(returnsArray[i], 3)
-#    print(returnsArray)
-#    print(result)
+for i in range(5):
+    returnsArray = createReturnsArray(loanLengthYrs, meanYearlyReturn, returnStandardDeviation)
+    result = calculateRecurringResults(loanAmount, loanLengthYrs, loanIntRate, periodsPerYear, extraPayOrInvest, returnsArray)
+    for i in range(len(returnsArray)):
+        returnsArray[i] = round(returnsArray[i], 3)
+    print(returnsArray)
+    print(result)
