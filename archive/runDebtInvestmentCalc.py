@@ -1,7 +1,7 @@
 #use python library tkinter to create a popup that prompts user inputs and then references other Utils
 
-import extraPaymentCalculationUtils as extra
-import oneTimeCalculationUtils as one
+import archive.extraPaymentCalculationUtils as extra
+import archive.oneTimeCalculationUtils as one
 
 
 print("Debt/Investment Calculator . . .")
